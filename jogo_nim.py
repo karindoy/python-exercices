@@ -32,17 +32,23 @@ def usuario_escolhe_jogada(n, m):
 
 
 def situacaoJogo(éVezDoJogador, n, pecasTirar):
+
+    print(jogadorDaVez(éVezDoJogador), 'tirou', pecasTirar, 'peças.')
+
+    if(n >= 1):
+        print('Agora restam', n, 'peças no tabuleiro.')
+    elif(n == 1):
+        print('Agora resta apenas uma peça no tabuleiro.')
+
+
+def jogadorDaVez(éVezDoJogador):
+
     if(éVezDoJogador):
         jogadorDaVez = 'Você'
     else:
         jogadorDaVez = 'O computador'
 
-    print(jogadorDaVez + 'tirou', pecasTirar, 'peças.')
-
-    if(n != 1):
-        print('Agora restam', n, 'peças no tabuleiro.')
-    else:
-        print('Agora resta apenas uma peça no tabuleiro.')
+    return jogadorDaVez
 
 
 def partida():
@@ -60,30 +66,40 @@ def partida():
         pecasTirar = usuario_escolhe_jogada(n, m)
 
     n = n - pecasTirar
-
     situacaoJogo(éVezDoJogador, n, pecasTirar)
 
-    while(n >= 0):
+    while(n > 0):
 
-        if(éVezDoJogador == False):
-            éVezDoJogador = True
-            pecasTirar = usuario_escolhe_jogada(n, m)
-        else:
+        if(éVezDoJogador):
             éVezDoJogador = False
+            pecasTirar = computador_escolhe_jogada(n, m)
+        else:
+            éVezDoJogador = True
             pecasTirar = usuario_escolhe_jogada(n, m)
 
         n = n - pecasTirar
+        situacaoJogo(éVezDoJogador, n, pecasTirar)
+
+    print('Fim do jogo!', jogadorDaVez(éVezDoJogador), 'ganhou!')
 
 
 def main():
-    tipoDeJogo = input('Bem-vindo ao jogo do NIM! Escolha: \n' +
-                       '1 - para jogar uma partida isolada \n' +
-                       '2 - para jogar um campeonato ')
+    tipoDeJogo = int(input('Bem-vindo ao jogo do NIM! Escolha: \n' +
+                           '1 - para jogar uma partida isolada \n' +
+                           '2 - para jogar um campeonato '))
 
     if(tipoDeJogo == 1):
         print('Voce escolheu uma partida isolada!')
-    elif(tipoDeJogo == 1):
+        partida()
+    elif(tipoDeJogo == 2):
+
+        i = 1
+
         print('Voce escolheu um campeonato!')
+
+        while (i < 3):
+            partida()
+            i += 1
 
 
 def test_computador_escolhe_jogada():
@@ -127,6 +143,10 @@ def test_computador_escolhe_jogada():
         print('ok for computador_escolhe_jogada(15, 4))')
     else:
         print('not ok for computador_escolhe_jogada(15, 4)')
+    if(computador_escolhe_jogada(25, 25) == 25):
+        print('ok for computador_escolhe_jogada(25, 25))')
+    else:
+        print('not ok for computador_escolhe_jogada(25, 25)')
 
 
 def test_usuario_escolhe_jogada():
@@ -152,6 +172,7 @@ def test_usuario_escolhe_jogada():
         print('not ok for usuario_escolhe_jogada(2, 3)')
 
 
-test_computador_escolhe_jogada()
-
+# test_computador_escolhe_jogada()
 # test_usuario_escolhe_jogada()
+
+main()
