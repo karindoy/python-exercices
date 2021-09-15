@@ -1,18 +1,21 @@
+placarDoJogador = 0
+placarDoComputador = 0
+
+
 def computador_escolhe_jogada(n, m):  # 20 8
 
-    i = 1
-    pecasTirar = 1
+    # if(n - pecasTirar  % (m + 1) == 0) usuario
 
-    while((i <= m) and (i <= n)):
-        if((n - i) % (m + 1) == 0):
-            pecasTirar = i
+    # n = (n - m) % (m + 1) == 0
+    pecasTirar = m
+    if n < m:
+        pecasTirar = n
 
-        i += 1
-    if (pecasTirar == 1):
-        if(m < n):
-            pecasTirar = m
-        if(n < m):
-            pecasTirar = n
+    while(not (n - pecasTirar) % (m + 1) == 0):
+        pecasTirar -= 1
+
+        if (pecasTirar == 0):
+            return m
 
     return pecasTirar
 
@@ -33,9 +36,12 @@ def usuario_escolhe_jogada(n, m):
 
 def situacaoJogo(éVezDoJogador, n, pecasTirar):
 
-    print(jogadorDaVez(éVezDoJogador), 'tirou', pecasTirar, 'peças.')
+    if(pecasTirar >= 1):
+        print(jogadorDaVez(éVezDoJogador), 'tirou uma peça.')
+    elif(pecasTirar == 1):
+        print(jogadorDaVez(éVezDoJogador), 'tirou', pecasTirar, 'peças.')
 
-    if(n >= 1):
+    if(n > 1):
         print('Agora restam', n, 'peças no tabuleiro.')
     elif(n == 1):
         print('Agora resta apenas uma peça no tabuleiro.')
@@ -53,17 +59,20 @@ def jogadorDaVez(éVezDoJogador):
 
 def partida():
 
+    global placarDoJogador
+    global placarDoComputador
+
     n = int(input('Quantas peças? '))
     m = int(input('Limite de peças por jogada? '))
     éVezDoJogador = False
 
-    if(n % (m + 1) != 0):
-        print('Computador começa!')
-        pecasTirar = computador_escolhe_jogada(n, m)
-    else:
+    if(n % (m + 1) == 0):
         print('Você começa!')
         éVezDoJogador = True
         pecasTirar = usuario_escolhe_jogada(n, m)
+    else:
+        print('Computador começa!')
+        pecasTirar = computador_escolhe_jogada(n, m)
 
     n = n - pecasTirar
     situacaoJogo(éVezDoJogador, n, pecasTirar)
@@ -82,8 +91,14 @@ def partida():
 
     print('Fim do jogo!', jogadorDaVez(éVezDoJogador), 'ganhou!')
 
+    if(éVezDoJogador):
+        placarDoJogador += 1
+    else:
+        placarDoComputador += 1
+
 
 def main():
+
     tipoDeJogo = int(input('Bem-vindo ao jogo do NIM! Escolha: \n' +
                            '1 - para jogar uma partida isolada \n' +
                            '2 - para jogar um campeonato '))
@@ -97,9 +112,13 @@ def main():
 
         print('Voce escolheu um campeonato!')
 
-        while (i < 3):
+        while (i <= 3):
+            print('**** Rodada', i, '****')
             partida()
             i += 1
+
+        print('**** Final do campeonato! ****')
+        print('Placar: Você 0 X 3 Computador')
 
 
 def test_computador_escolhe_jogada():
@@ -143,10 +162,16 @@ def test_computador_escolhe_jogada():
         print('ok for computador_escolhe_jogada(15, 4))')
     else:
         print('not ok for computador_escolhe_jogada(15, 4)')
+
     if(computador_escolhe_jogada(25, 25) == 25):
         print('ok for computador_escolhe_jogada(25, 25))')
     else:
         print('not ok for computador_escolhe_jogada(25, 25)')
+
+    if(computador_escolhe_jogada(11, 4) == 1):
+        print('ok for computador_escolhe_jogada(11, 4))')
+    else:
+        print('not ok for computador_escolhe_jogada(11, 4)')
 
 
 def test_usuario_escolhe_jogada():
@@ -172,7 +197,7 @@ def test_usuario_escolhe_jogada():
         print('not ok for usuario_escolhe_jogada(2, 3)')
 
 
-# test_computador_escolhe_jogada()
+test_computador_escolhe_jogada()
 # test_usuario_escolhe_jogada()
 
 main()
