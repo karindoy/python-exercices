@@ -80,28 +80,29 @@ def n_palavras_diferentes(lista_palavras):
 
 def obter_tamanho_medio_das_palavras(texto):
 
-    texto = re.sub('[.,!@#$%*():]', "", texto)
-    print(texto)
+    texto = re.sub('[.,!@#$%*():?]', "", texto)
+
     listaDePalavras = separa_palavras(texto)
     tamanhoPalavras = 0
 
     for palavra in listaDePalavras:
         tamanhoPalavras += len(palavra)
 
-    return round(tamanhoPalavras/len(listaDePalavras), 1)
+    return tamanhoPalavras/len(listaDePalavras)
 
 
 def obter_relacao_typen_token(texto):
+    texto = re.sub('[.,!@#$%*():?]', "", texto)
     listaDePalavras = separa_palavras(texto)
     typenToken = n_palavras_diferentes(listaDePalavras)/len(listaDePalavras)
-    return round(typenToken, 1)
+    return typenToken
 
 
 def obter_relacao_hapax_legomana(texto):
 
     listaDePalavras = separa_palavras(texto)
     hapax = n_palavras_unicas(listaDePalavras)/len(listaDePalavras)
-    return round(hapax, 2)
+    return hapax
 
 
 def obter_media_de_caracteres__da_sentenca(texto):
@@ -117,18 +118,18 @@ def obter_media_de_caracteres__da_sentenca(texto):
 
 def obter_complexidade_da_sentenca(texto):
 
-    listaSentencas = separa_frases(texto)
+    listaSentencas = separa_sentencas(texto)
     n_frases = 0
 
     for sentenca in listaSentencas:
 
-        n_frases += separa_frases(sentenca)
+        n_frases += len(separa_frases(sentenca))
 
     return n_frases/len(listaSentencas)
 
 
 def obter_media_de_caracteres_da_frase(texto):
-    listaSentencas = separa_frases(texto)
+    listaSentencas = separa_sentencas(texto)
     qtddDeCaracteres = 0
     n_frases = 0
 
@@ -148,14 +149,21 @@ def compara_assinatura(as_a, as_b):
 
 def calcula_assinatura(texto):
     '''IMPLEMENTAR. Essa funcao recebe um texto e deve devolver a assinatura do texto.'''
-    mediaDasPalavras = obter_tamanho_medio_das_palavras(texto)
-    relacaoTypenToken = obter_relacao_typen_token(texto)
-    razao_hapax_legomana = obter_relacao_hapax_legomana(texto)
+
     mediaDeCaractDaSentenca = obter_media_de_caracteres__da_sentenca(texto)
     complexidade_da_sentenca = obter_complexidade_da_sentenca(texto)
     mediaDeCaractDaFrase = obter_media_de_caracteres_da_frase(texto)
+    texto = re.sub('[.,!@#$%*():?]', "", texto)
 
-    pass
+    mediaDasPalavras = obter_tamanho_medio_das_palavras(texto)
+    relacaoTypenToken = obter_relacao_typen_token(texto)
+    razao_hapax_legomana = obter_relacao_hapax_legomana(texto)
+
+    [mediaDasPalavras, relacaoTypenToken, razao_hapax_legomana,
+        mediaDeCaractDaSentenca, complexidade_da_sentenca, mediaDeCaractDaFrase]
+
+    return [mediaDasPalavras, relacaoTypenToken, razao_hapax_legomana,
+            mediaDeCaractDaSentenca, complexidade_da_sentenca, mediaDeCaractDaFrase]
 
 
 def avalia_textos(textos, ass_cp):
@@ -167,31 +175,35 @@ def avalia_textos(textos, ass_cp):
 # le_textos()
 
 
-def test_obter_tamanho_medio_das_palavras():
+def test_assinatura():
 
-    texto = 'O gato caçava o rato, mas o rato fugiu.'
-    texto2 = 'O gato caçava o rato.'
-
-    mediaDasPalavras = obter_tamanho_medio_das_palavras(texto)
-    relacaoTypenToken = obter_relacao_typen_token(texto2)
-    razao_hapax_legomana = obter_relacao_hapax_legomana(texto2)
+    texto = 'Então resolveu ir brincar com a Máquina pra ser também imperador dos filhos da mandioca. Mas as três cunhas deram muitas risadas e falaram que isso de deuses era gorda mentira antiga, que não tinha deus não e que com a máquina ninguém não brinca porque ela mata. A máquina não era deus não, nem possuía os distintivos femininos de que o herói gostava tanto. Era feita pelos homens. Se mexia com eletricidade com fogo com água com vento com fumo, os homens aproveitando as forças da natureza. Porém jacaré acreditou? nem o herói! Se levantou na cama e com um gesto, esse sim! bem guaçu de desdém, tó! batendo o antebraço esquerdo dentro do outro dobrado, mexeu com energia a munheca direita pras três cunhas e partiu. Nesse instante, falam, ele inventou o gesto famanado de ofensa: a pacova.'
+    assinatura = calcula_assinatura(texto)
     mediaDeCaractDaSentenca = obter_media_de_caracteres__da_sentenca(texto)
     complexidade_da_sentenca = obter_complexidade_da_sentenca(texto)
     mediaDeCaractDaFrase = obter_media_de_caracteres_da_frase(texto)
+    texto = re.sub('[.,!@#$%*():?]', "", texto)
 
-    expectedMediaDasPalavras = 3.2
-    expectedRelacaoTypenToken = 0.8
-    expectedRazao_hapax_legomana = 0.6
-    expectedMediaDeCaractDaSentenca = 29
-    expectedComplexidade_da_sentenca = 1
-    expectedMediaDeCaractDaFrase = 29
+    mediaDasPalavras = obter_tamanho_medio_das_palavras(texto)
+    relacaoTypenToken = obter_relacao_typen_token(texto)
+    razao_hapax_legomana = obter_relacao_hapax_legomana(texto)
+
+    expectedMediaDasPalavras = 4.507142857142857
+    expectedRelacaoTypenToken = 0.6928571428571428
+    expectedRazao_hapax_legomana = 0.55
+    expectedMediaDeCaractDaSentenca = 70.81818181818181
+    expectedComplexidade_da_sentenca = 1.8181818181818181
+    expectedMediaDeCaractDaFrase = 38.5
+    expectedAssinatura = [4.507142857142857, 0.6928571428571428,
+                          0.55, 70.81818181818181, 1.8181818181818181, 38.5]
 
     valoresTestes = [[mediaDasPalavras, expectedMediaDasPalavras],
                      [relacaoTypenToken, expectedRelacaoTypenToken],
                      [razao_hapax_legomana, expectedRazao_hapax_legomana],
                      [mediaDeCaractDaSentenca, expectedMediaDeCaractDaSentenca],
                      [complexidade_da_sentenca, expectedComplexidade_da_sentenca],
-                     [mediaDeCaractDaFrase, expectedMediaDeCaractDaFrase]]
+                     [mediaDeCaractDaFrase, expectedMediaDeCaractDaFrase],
+                     [assinatura, expectedAssinatura]]
 
     i = 0
 
@@ -206,4 +218,4 @@ def test_obter_tamanho_medio_das_palavras():
         i += 1
 
 
-test_obter_tamanho_medio_das_palavras()
+test_assinatura()
