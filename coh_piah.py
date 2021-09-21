@@ -88,9 +88,6 @@ def obter_tamanho_medio_das_palavras(texto):
     for palavra in listaDePalavras:
         tamanhoPalavras += len(palavra)
 
-    print(listaDePalavras)
-    print(tamanhoPalavras)
-
     return round(tamanhoPalavras/len(listaDePalavras), 1)
 
 
@@ -108,15 +105,40 @@ def obter_relacao_hapax_legomana(texto):
 
 
 def obter_media_de_caracteres__da_sentenca(texto):
-    return 0
+
+    listaSentencas = separa_sentencas(texto)
+    qtddDeCaracteres = 0
+
+    for sentenca in listaSentencas:
+        qtddDeCaracteres += len(sentenca)
+
+    return qtddDeCaracteres/len(listaSentencas)
 
 
 def obter_complexidade_da_sentenca(texto):
-    return 0
+
+    listaSentencas = separa_frases(texto)
+    n_frases = 0
+
+    for sentenca in listaSentencas:
+
+        n_frases += separa_frases(sentenca)
+
+    return n_frases/len(listaSentencas)
 
 
 def obter_media_de_caracteres_da_frase(texto):
-    return 0
+    listaSentencas = separa_frases(texto)
+    qtddDeCaracteres = 0
+    n_frases = 0
+
+    for sentenca in listaSentencas:
+        for frase in separa_frases(sentenca):
+
+            qtddDeCaracteres += len(frase)
+            n_frases += 1
+
+    return qtddDeCaracteres/n_frases
 
 
 def compara_assinatura(as_a, as_b):
