@@ -92,7 +92,7 @@ def obter_tamanho_medio_das_palavras(texto):
 
 
 def obter_relacao_typen_token(texto):
-    texto = re.sub('[.,!@#$%*():?]', "", texto)
+    texto = re.sub('[.,!@#$%*():?]-;', "", texto)
     listaDePalavras = separa_palavras(texto)
     typenToken = n_palavras_diferentes(listaDePalavras)/len(listaDePalavras)
     return typenToken
@@ -144,7 +144,14 @@ def obter_media_de_caracteres_da_frase(texto):
 
 def compara_assinatura(as_a, as_b):
     '''IMPLEMENTAR. Essa funcao recebe duas assinaturas de texto e deve devolver o grau de similaridade nas assinaturas.'''
-    pass
+    i = 0
+    soma = 0
+
+    while i < 5:
+        soma += abs(as_a[i] - as_b[i])
+        i += 1
+
+    return soma/6
 
 
 def calcula_assinatura(texto):
@@ -168,7 +175,22 @@ def calcula_assinatura(texto):
 
 def avalia_textos(textos, ass_cp):
     '''IMPLEMENTAR. Essa funcao recebe uma lista de textos e uma assinatura ass_cp e deve devolver o numero (1 a n) do texto com maior probabilidade de ter sido infectado por COH-PIAH.'''
-    pass
+    i = 0
+
+    while i < (len(textos) - 1):
+        assinaturaTexto = calcula_assinatura(textos[i])
+        grauSimilaridade = compara_assinatura(assinaturaTexto, ass_cp)
+
+        if i == 0:
+            copiado = i + 1
+            grauSimilaridadeCopiado = grauSimilaridade
+        elif (grauSimilaridade > grauSimilaridadeCopiado):
+            copiado = i + 1
+            grauSimilaridadeCopiado = grauSimilaridade
+
+        i += 1
+
+    return copiado
 
 
 # le_assinatura()
