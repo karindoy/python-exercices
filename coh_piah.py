@@ -79,15 +79,32 @@ def n_palavras_diferentes(lista_palavras):
 
 
 def obter_tamanho_medio_das_palavras(texto):
-    return 0
+
+    texto = re.sub('[.,!@#$%*():]', "", texto)
+    print(texto)
+    listaDePalavras = separa_palavras(texto)
+    tamanhoPalavras = 0
+
+    for palavra in listaDePalavras:
+        tamanhoPalavras += len(palavra)
+
+    print(listaDePalavras)
+    print(tamanhoPalavras)
+
+    return round(tamanhoPalavras/len(listaDePalavras), 1)
 
 
 def obter_relacao_typen_token(texto):
-    return 0
+    listaDePalavras = separa_palavras(texto)
+    typenToken = n_palavras_diferentes(listaDePalavras)/len(listaDePalavras)
+    return round(typenToken, 1)
 
 
 def obter_relacao_hapax_legomana(texto):
-    return 0
+
+    listaDePalavras = separa_palavras(texto)
+    hapax = n_palavras_unicas(listaDePalavras)/len(listaDePalavras)
+    return round(hapax, 2)
 
 
 def obter_media_de_caracteres__da_sentenca(texto):
@@ -131,20 +148,21 @@ def avalia_textos(textos, ass_cp):
 def test_obter_tamanho_medio_das_palavras():
 
     texto = 'O gato caçava o rato, mas o rato fugiu.'
+    texto2 = 'O gato caçava o rato.'
 
     mediaDasPalavras = obter_tamanho_medio_das_palavras(texto)
-    relacaoTypenToken = obter_relacao_typen_token(texto)
-    razao_hapax_legomana = obter_relacao_hapax_legomana(texto)
+    relacaoTypenToken = obter_relacao_typen_token(texto2)
+    razao_hapax_legomana = obter_relacao_hapax_legomana(texto2)
     mediaDeCaractDaSentenca = obter_media_de_caracteres__da_sentenca(texto)
     complexidade_da_sentenca = obter_complexidade_da_sentenca(texto)
     mediaDeCaractDaFrase = obter_media_de_caracteres_da_frase(texto)
 
-    expectedMediaDasPalavras = 39/9
-    expectedRelacaoTypenToken = 4/5
-    expectedRazao_hapax_legomana = 3/5
-    expectedMediaDeCaractDaSentenca = 39
+    expectedMediaDasPalavras = 3.2
+    expectedRelacaoTypenToken = 0.8
+    expectedRazao_hapax_legomana = 0.6
+    expectedMediaDeCaractDaSentenca = 29
     expectedComplexidade_da_sentenca = 1
-    expectedMediaDeCaractDaFrase = 39
+    expectedMediaDeCaractDaFrase = 29
 
     valoresTestes = [[mediaDasPalavras, expectedMediaDasPalavras],
                      [relacaoTypenToken, expectedRelacaoTypenToken],
