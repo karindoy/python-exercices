@@ -80,27 +80,36 @@ def n_palavras_diferentes(lista_palavras):
 
 def obter_tamanho_medio_das_palavras(texto):
 
-    texto = re.sub('[.,!@#$%*():?]', "", texto)
-
-    listaDePalavras = separa_palavras(texto)
+    listaDePalavras = 0
     tamanhoPalavras = 0
 
-    for palavra in listaDePalavras:
-        tamanhoPalavras += len(palavra)
+    for sentenca in separa_sentencas(texto):
+        for frase in separa_frases(sentenca):
+            for palavra in separa_palavras(frase):
+                tamanhoPalavras += len(palavra)
+                listaDePalavras += 1
 
-    return tamanhoPalavras/len(listaDePalavras)
+    return tamanhoPalavras/listaDePalavras
 
 
 def obter_relacao_typen_token(texto):
-    texto = re.sub('[.,!@#$%*():?]-;', "", texto)
-    listaDePalavras = separa_palavras(texto)
+
+    listaDePalavras = []
+
+    for sentenca in separa_sentencas(texto):
+        for frase in separa_frases(sentenca):
+            listaDePalavras = listaDePalavras + separa_palavras(frase)
+    print(listaDePalavras)
     typenToken = n_palavras_diferentes(listaDePalavras)/len(listaDePalavras)
     return typenToken
 
 
 def obter_relacao_hapax_legomana(texto):
+    listaDePalavras = []
+    for sentenca in separa_sentencas(texto):
+        for frase in separa_frases(sentenca):
+            listaDePalavras = listaDePalavras + separa_palavras(frase)
 
-    listaDePalavras = separa_palavras(texto)
     hapax = n_palavras_unicas(listaDePalavras)/len(listaDePalavras)
     return hapax
 
@@ -160,14 +169,10 @@ def calcula_assinatura(texto):
     mediaDeCaractDaSentenca = obter_media_de_caracteres__da_sentenca(texto)
     complexidade_da_sentenca = obter_complexidade_da_sentenca(texto)
     mediaDeCaractDaFrase = obter_media_de_caracteres_da_frase(texto)
-    texto = re.sub('[.,!@#$%*():?]', "", texto)
 
     mediaDasPalavras = obter_tamanho_medio_das_palavras(texto)
     relacaoTypenToken = obter_relacao_typen_token(texto)
     razao_hapax_legomana = obter_relacao_hapax_legomana(texto)
-
-    [mediaDasPalavras, relacaoTypenToken, razao_hapax_legomana,
-        mediaDeCaractDaSentenca, complexidade_da_sentenca, mediaDeCaractDaFrase]
 
     return [mediaDasPalavras, relacaoTypenToken, razao_hapax_legomana,
             mediaDeCaractDaSentenca, complexidade_da_sentenca, mediaDeCaractDaFrase]
@@ -181,10 +186,7 @@ def avalia_textos(textos, ass_cp):
         assinaturaTexto = calcula_assinatura(textos[i])
         grauSimilaridade = compara_assinatura(assinaturaTexto, ass_cp)
 
-        if i == 0:
-            copiado = i + 1
-            grauSimilaridadeCopiado = grauSimilaridade
-        elif (grauSimilaridade > grauSimilaridadeCopiado):
+        if (i == 0) or (grauSimilaridade < grauSimilaridadeCopiado):
             copiado = i + 1
             grauSimilaridadeCopiado = grauSimilaridade
 
@@ -200,15 +202,23 @@ def avalia_textos(textos, ass_cp):
 def test_assinatura():
 
     texto = 'Então resolveu ir brincar com a Máquina pra ser também imperador dos filhos da mandioca. Mas as três cunhas deram muitas risadas e falaram que isso de deuses era gorda mentira antiga, que não tinha deus não e que com a máquina ninguém não brinca porque ela mata. A máquina não era deus não, nem possuía os distintivos femininos de que o herói gostava tanto. Era feita pelos homens. Se mexia com eletricidade com fogo com água com vento com fumo, os homens aproveitando as forças da natureza. Porém jacaré acreditou? nem o herói! Se levantou na cama e com um gesto, esse sim! bem guaçu de desdém, tó! batendo o antebraço esquerdo dentro do outro dobrado, mexeu com energia a munheca direita pras três cunhas e partiu. Nesse instante, falam, ele inventou o gesto famanado de ofensa: a pacova.'
+    texto2 = 'Senão quando, estando eu ocupado em preparar e apurar a minha invenção, recebi em cheio um golpe de ar; adoeci logo, e não me tratei. Tinha o emplasto no cérebro; trazia comigo a idéia fixa dos doidos e dos fortes. Via-me, ao longe, ascender do chão das turbas, e remontar ao Céu, como uma águia imortal, e não é diante de tão excelso espetáculo que um homem pode sentir a dor que o punge. No outro dia estava pior; tratei-me enfim, mas incompletamente, sem método, nem cuidado, nem persistência; tal foi a origem do mal que me trouxe à eternidade. Sabem já que morri numa sexta-feira, dia aziago, e creio haver provado que foi a minha invenção que me matou. Há demonstrações menos lúcidas e não menos triunfantes. Não era impossível, entretanto, que eu chegasse a galgar o cimo de um século, e a figurar nas folhas públicas, entre macróbios. Tinha saúde e robustez. Suponha-se que, em vez de estar lançando os alicerces de uma invenção farmacêutica, tratava de coligir os elementos de uma instituição política, ou de uma reforma religiosa. Vinha a corrente de ar, que vence em eficácia o cálculo humano, e lá se ia tudo. Assim corre a sorte dos homens.'
+    texto3 = 'Voltei-me para ela; Capitu tinha os olhos no chão. Ergueu-os logo, devagar, e ficamos a olhar um para o outro... Confissão de crianças, tu valias bem duas ou três páginas, mas quero ser poupado. Em verdade, não falamos nada; o muro falou por nós. Não nos movemos, as mãos é que se estenderam pouco a pouco, todas quatro, pegando-se, apertando-se, fundindo-se. Não marquei a hora exata daquele gesto. Devia tê-la marcado; sinto a falta de uma nota escrita naquela mesma noite, e que eu poria aqui com os erros de ortografia que trouxesse, mas não traria nenhum, tal era a diferença entre o estudante e o adolescente. Conhecia as regras do escrever, sem suspeitar as do amar; tinha orgias de latim e era virgem de mulheres.'
+
     assinatura = calcula_assinatura(texto)
+    assinatura2 = calcula_assinatura(texto2)
+    assinatura3 = calcula_assinatura(texto3)
+
     mediaDeCaractDaSentenca = obter_media_de_caracteres__da_sentenca(texto)
     complexidade_da_sentenca = obter_complexidade_da_sentenca(texto)
     mediaDeCaractDaFrase = obter_media_de_caracteres_da_frase(texto)
-    texto = re.sub('[.,!@#$%*():?]', "", texto)
 
     mediaDasPalavras = obter_tamanho_medio_das_palavras(texto)
     relacaoTypenToken = obter_relacao_typen_token(texto)
     razao_hapax_legomana = obter_relacao_hapax_legomana(texto)
+
+    expectedMediaDasPalavras2 = 4.471
+    expectedMediaDasPalavras3 = 4.507
 
     expectedMediaDasPalavras = 4.507142857142857
     expectedRelacaoTypenToken = 0.6928571428571428
@@ -225,7 +235,9 @@ def test_assinatura():
                      [mediaDeCaractDaSentenca, expectedMediaDeCaractDaSentenca],
                      [complexidade_da_sentenca, expectedComplexidade_da_sentenca],
                      [mediaDeCaractDaFrase, expectedMediaDeCaractDaFrase],
-                     [assinatura, expectedAssinatura]]
+                     [assinatura, expectedAssinatura],
+                     [assinatura2[0], expectedMediaDasPalavras2],
+                     [assinatura3[0], expectedMediaDasPalavras3]]
 
     i = 0
 
