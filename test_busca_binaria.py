@@ -55,6 +55,25 @@ class TestBuscaBinaria(unittest.TestCase):
 
         self.assertEqual(result, False)
 
+    def test_altura(self):
+        print("test_altura")
+
+        lista = list(range(0, 80))
+        result = busca_binaria.busca(
+            lista, 36)
+        print('result is', result)
+
+        self.assertEqual(result, 36)
+
+    def test_largura(self):
+        print("test_largura")
+
+        lista = list(range(0, 25))
+        result = busca_binaria.busca(
+            lista, 24)
+
+        self.assertEqual(result, 24)
+
 
 if __name__ == '__main__':
     unittest.main()
